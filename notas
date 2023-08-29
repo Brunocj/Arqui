@@ -1,0 +1,8 @@
+Generar .so para usar ctypes
+gcc -shared -o lib_euler.so -fPIC lib_euler.c
+Declaraciones de la libreria
+lib = ctypes.CDLL('./lib_euler.so') -> usar el archivo creado
+lib.euler.argtypes = [ctypes.c_int]  -> argtypes para las entradas
+lib.euler.restype = ctypes.c_double -> restype para la salida
+
+-> buscar la libreria en internet para saber como declarar entradas y salidas de acuerdo a la funcion que se quiera implementar desde c.
