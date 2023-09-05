@@ -40,5 +40,9 @@ if __name__ == '__main__':
     plt.ylabel("Tiempo [us]")
     plt.savefig("Euler_comparacion2.png")
     plt.close()
-     #gcc fPIC -shared lib_euler.c -o lib_euler.so
+     #gcc -fPIC -shared lib_euler.c -o lib_euler.so
      #linea para compilar lib_euler.c y que se genere el .so que se usa en python con la libreria ctypes
+    # gcc -c c_fast_cos.c -o c_fast_cos.o
+    #linea para crear object file de un archivo
+    #gcc -shared c_fast_cos.o -o c_fast_cos.so
+    #linea para crear la libreria compartida a partir del object file
