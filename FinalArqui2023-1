@@ -1,0 +1,58 @@
+import random
+import time
+import statistics
+from threading import Thread
+def suma_norm(arr_a, arr_b, res):
+    for i in range(len(arr_a)):
+        res[0] += (arr_b[i] - arr_a[i])**2
+def norm_vec(arr_a, arr_b, res):
+    suma_norm(arr_a, arr_b, res)
+    return res[0]**(0.5)
+def crear_vector(size):
+    lst = []
+    for i in range(size):
+        lst.append(random.uniform(0, 10))
+    return lst
+
+if __name__ == "__main__":
+    time_thread = []
+    time_sinc = []
+    for i in range(50):
+        a = crear_vector(4096)
+        b = crear_vector(4096)
+        res = [0]
+        tic = time.perf_counter()
+        norm_vec(a, b, res)
+        toc = time.perf_counter()
+        a_0 = a[0:1024]
+        a_1 = a[1024:2048]
+        a_2 = a[2048:3072]
+        a_3 = a[3072:4096]
+        b_0 = b[0:1024]
+        b_1 = b[1024:2048]
+        b_2 = b[2048:3072]
+        b_3 = b[3072:4096]
+        res0 = [0]
+        res1 = [0]
+        res2 = [0]
+        res3 = [0]
+        toc2 = time.perf_counter()
+        t1 = Thread(target = suma_norm(a_0, b_0, res0))
+        t2 = Thread(target = suma_norm(a_1, b_1, res1))
+        t3 = Thread(target = suma_norm(a_2, b_2, res2))
+        t4 = Thread(target = suma_norm(a_3, b_3, res3))
+        t1.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t1.join()
+        t2.join()
+        t3.join()
+        t4.join()
+        A = res0[0] + res1[0] + res2[0] + res3[0]
+        resp = A**0.5
+        time_sinc.append(toc-tic)
+        time_thread.append(toc2 - toc)
+    print("Mediana sincronica:", statistics.median(time_sinc)*1e3)
+    print("Mediana hilos:", statistics.median(time_thread)*1e3)
+    print("Speedup:", (statistics.median(time_sinc))/(statistics.median(time_thread)))
